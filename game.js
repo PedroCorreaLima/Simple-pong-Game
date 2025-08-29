@@ -35,6 +35,10 @@ const ball = {
     dy: 6 * (Math.random() > 0.5 ? 1 : -1)
 };
 
+// Scores
+let leftScore = 0;
+let rightScore = 0;
+
 // Mouse control for left paddle
 canvas.addEventListener('mousemove', function (e) {
     const rect = canvas.getBoundingClientRect();
@@ -69,6 +73,15 @@ function drawNet() {
     ctx.lineTo(canvas.width / 2, canvas.height);
     ctx.stroke();
     ctx.setLineDash([]);
+}
+
+function drawScore() {
+    ctx.font = '32px Arial';
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    ctx.fillText(leftScore, canvas.width / 4, 40);
+    ctx.fillText(rightScore, canvas.width * 3 / 4, 40);
 }
 
 function clearCanvas() {
@@ -120,7 +133,11 @@ function update() {
     }
 
     // Score (left or right wall)
-    if (ball.x < 0 || ball.x + ball.size > canvas.width) {
+    if (ball.x < 0) {
+        rightScore++;
+        resetBall();
+    } else if (ball.x + ball.size > canvas.width) {
+        leftScore++;
         resetBall();
     }
 
@@ -151,6 +168,7 @@ function render() {
     drawRect(leftPaddle.x, leftPaddle.y, leftPaddle.width, leftPaddle.height);
     drawRect(rightPaddle.x, rightPaddle.y, rightPaddle.width, rightPaddle.height);
     drawBall(ball.x, ball.y, ball.size);
+    drawScore();
 }
 
 // Main game loop
